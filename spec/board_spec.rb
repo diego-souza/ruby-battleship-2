@@ -5,7 +5,7 @@ RSpec.describe Board do
     @new_board = Board.new
   end
 
-  context "board initialization" do
+  context "Board initialization" do
     it "starts with no ships" do
       expect(@new_board.ships).to be_empty
     end
@@ -33,24 +33,25 @@ RSpec.describe Board do
       expect { @new_board.place_ship!(ship) }.to raise_error(ShipOutsideBoardError)
     end
 
-    it "can place multiple ships" do
+    context "has one ship already placed" do
+      before(:each) do
       first_coords = Set.new([[0,0]])
-      second_coords = Set.new([[2,2], [2,3], [2,4]])
       first_ship = double("First Ship", :coords => first_coords)
-      second_ship = double("Second Ship", :coords => second_coords)
       @new_board.place_ship!(first_ship)
-      expect(@new_board.ships).to include(first_coords)
-      @new_board.place_ship!(second_ship)
-      expect(@new_board.ships).to include(second_coords)
-    end
+      end
 
-    it "raises error if ship overlaps with another ship" do
-      first_coords = Set.new([[0,0]])
-      second_coords = Set.new([[0,0], [0,1], [0,2]])
-      first_ship = double("First Ship", :coords => first_coords)
-      second_ship = double("Second Ship", :coords => second_coords)
-      @new_board.place_ship!(first_ship)
-      expect { @new_board.place_ship!(second_ship) }.to raise_error(ShipOverlapError)
+      it "can place multiple ships" do
+        second_coords = Set.new([[2,2], [2,3], [2,4]])
+        second_ship = double("Second Ship", :coords => second_coords)
+        @new_board.place_ship!(second_ship)
+        expect(@new_board.ships).to include(second_coords)
+      end
+
+      it "raises error if ship overlaps with another ship" do
+        second_coords = Set.new([[0,0], [0,1], [0,2]])
+        second_ship = double("Second Ship", :coords => second_coords)
+        expect { @new_board.place_ship!(second_ship) }.to raise_error(ShipOverlapError)
+      end
     end
   end
 
