@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'coord'
 class ShipOutsideBoardError < StandardError
 end
 class ShootOutsideBoardError < StandardError
@@ -33,7 +34,7 @@ class Board
   end
 
   def sample_position
-    [rand(@dim), rand(@dim)]
+    Coord.new(rand(@dim), rand(@dim))
   end
 
   def shoot!(coord)
@@ -50,8 +51,7 @@ class Board
 
   def coords_inside_board?(coords)
     coords.all? do |coord|
-      x, y = coord
-      board_range.include?(x) && board_range.include?(y)
+      board_range.include?(coord.x) && board_range.include?(coord.y)
     end
   end
 

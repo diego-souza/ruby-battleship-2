@@ -21,34 +21,35 @@ RSpec.describe Board do
 
   context "Ship placement" do
     it "can place a ship with coords inside the board" do
-      coords = Set.new([[0,0]])
+      coords = Set.new([Coord.new(0, 0)])
       ship = double("Ship", :coords => coords)
       @new_board.place_ship!(ship)
       expect(@new_board.ships).to eq(coords)
     end
 
     it "raises error if ship has coords outside the board" do
-      coords = Set.new([0,10])
+      coords = Set.new([Coord.new(0, 10)])
       ship = double("Ship", :coords => coords)
       expect { @new_board.place_ship!(ship) }.to raise_error(ShipOutsideBoardError)
     end
 
     context "has one ship already placed" do
       before(:each) do
-      first_coords = Set.new([[0,0]])
-      first_ship = double("First Ship", :coords => first_coords)
-      @new_board.place_ship!(first_ship)
+        first_coords = Set.new([Coord.new(0, 0)])
+        first_ship = double("First Ship", :coords => first_coords)
+        @new_board.place_ship!(first_ship)
       end
 
       it "can place multiple ships" do
-        second_coords = Set.new([[2,2], [2,3], [2,4]])
+        first_coords = Set.new([Coord.new(0, 0)])
+        second_coords = Set.new([Coord.new(2, 2), Coord.new(2, 3), Coord.new(2, 4)])
         second_ship = double("Second Ship", :coords => second_coords)
         @new_board.place_ship!(second_ship)
         expect(@new_board.ships).to include(second_coords)
       end
 
-      it "raises error if ship overlaps with another ship" do
-        second_coords = Set.new([[0,0], [0,1], [0,2]])
+      it "raises error if ship overlaps with another ship", focus: true do
+        second_coords = Set.new([Coord.new(0, 0), Coord.new(0, 1), Coord.new(0, 2)])
         second_ship = double("Second Ship", :coords => second_coords)
         expect { @new_board.place_ship!(second_ship) }.to raise_error(ShipOverlapError)
       end
@@ -57,19 +58,19 @@ RSpec.describe Board do
 
   context "Shooting" do
     it "can place a shot coord inside the board" do
-      coord = [0,0]
+      coord = Coord.new(0, 0)
       expect(@new_board.shoot!(coord)).to include(coord)
       expect(@new_board.shots).to eq(Set.new([coord]))
     end
 
     it "raises error if shot has coord outside the board" do
-      coord = [0,10]
+      coord = Coord.new(0, 10)
       expect { @new_board.shoot!(coord) }.to raise_error(ShootOutsideBoardError)
     end
 
     it "can shoot multiple coords" do
-      first_coord = [0,0]
-      second_coord = [0,1]
+      first_coord = Coord.new(0, 0)
+      second_coord = Coord.new(0, 1)
       expect(@new_board.shoot!(first_coord)).to include(first_coord)
       expect(@new_board.shots).to include(first_coord)
       expect(@new_board.shoot!(second_coord)).to include(first_coord)
@@ -83,7 +84,7 @@ RSpec.describe Board do
     end
 
     it "says game is over when there are shots in every ship position" do
-      first_coord = [0,0]
+      first_coord = Coord.new(0, 0)
       coords = Set.new([first_coord])
       ship = double("Ship", :coords => coords)
       @new_board.place_ship!(ship)
@@ -93,12 +94,13 @@ RSpec.describe Board do
 
     it "says game is not over when there are ships positions not shot" do
       first_coord = [0,0]
-      coords = Set.new([first_coord, [0,1]])
+      first_coord = Coord.new(0, 0)
+      coords = Set.new([first_coord, Coord.new(0,1)])
       ship = double("Ship", :coords => coords)
       @new_board.place_ship!(ship)
-      @new_board.shoot!([0,0])
-      @new_board.shoot!([1,0])
-      @new_board.shoot!([1,1])
+      @new_board.shoot!(Coord.new(0,0))
+      @new_board.shoot!(Coord.new(1,0))
+      @new_board.shoot!(Coord.new(1,1))
       expect(@new_board.check?).to be false
     end
   end

@@ -14,7 +14,7 @@ RSpec.describe Board do
 
   it "can shoot" do
     @new_game.setup!
-    coord = [0,0]
+    coord = Coord.new(0,0)
     @new_game.shoot!(coord)
     expect(@new_game.shots).to include(coord)
   end

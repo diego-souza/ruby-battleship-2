@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
+require 'coord'
+
 class Ship
   attr_reader :coords
 
   module Orientation
     DELTAS = [
-      NORTH = [0, -1].freeze,
-      SOUTH = [0, 1].freeze,
-      EAST  = [1, 0].freeze,
-      WEST  = [-1, 0].freeze
+      NORTH = Coord.new(0, -1),
+      SOUTH = Coord.new(0, 1),
+      EAST  = Coord.new(1, 0),
+      WEST  = Coord.new(-1, 0)
     ].freeze
   end
 
   def initialize(size, start_pos, orientation)
-    deltas = (0..size - 1).map { |scale| orientation.map { |delta| delta * scale } }
-    @coords = deltas.map { |x, y| [x + start_pos[0], y + start_pos[1]] }.to_set
+    deltas = (0..size - 1).map do |scale|
+      Coord.new(orientation.x * scale, orientation.y * scale)
+    end
+    @coords = deltas.map { |delta| start_pos.add(delta) }.to_set
   end
 end
