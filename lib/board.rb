@@ -1,12 +1,7 @@
 # frozen_string_literal: true
 
 require 'coord'
-class ShipOutsideBoardError < StandardError
-end
-class ShootOutsideBoardError < StandardError
-end
-class ShipOverlapError < StandardError
-end
+require 'errors'
 
 class Board
   attr_reader :dim, :ships, :shots
