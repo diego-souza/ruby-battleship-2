@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require 'board.rb'
-require 'ship.rb'
+require 'board'
+require 'ship'
+require 'errors'
 
 class Game
   extend Forwardable

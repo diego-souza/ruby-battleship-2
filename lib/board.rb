@@ -8,8 +8,8 @@ class Board
 
   def initialize(dim = 10)
     @dim = dim
-    @ships = Set.new
-    @shots = Set.new
+    @ships = []
+    @shots = []
   end
 
   def can_place_ship?(ship)
@@ -17,7 +17,7 @@ class Board
   end
 
   def check?
-    @ships.subset?(@shots)
+    @ships.to_set.subset?(@shots.to_set)
   end
 
   def place_ship!(ship)
@@ -25,7 +25,7 @@ class Board
     raise ShipOutsideBoardError unless coords_inside_board?(coords)
     raise ShipOverlapError if ship_coords_overlap?(coords)
 
-    @ships = @ships.union(coords)
+    @ships += coords
   end
 
   def sample_position
@@ -33,9 +33,9 @@ class Board
   end
 
   def shoot!(coord)
-    raise ShootOutsideBoardError unless coords_inside_board?(Set.new([coord]))
+    raise ShootOutsideBoardError unless coords_inside_board?([coord])
 
-    @shots = @shots.union(Set.new([coord]))
+    @shots << coord
   end
 
   private
@@ -51,6 +51,6 @@ class Board
   end
 
   def ship_coords_overlap?(coords)
-    @ships.intersect?(coords)
+    (@ships & coords).any?
   end
 end

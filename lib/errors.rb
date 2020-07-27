@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+class CouldNotGenerateRandomShip < StandardError
+end
+
 class ShipOutsideBoardError < StandardError
 end
 
