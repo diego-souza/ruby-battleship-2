@@ -18,6 +18,6 @@ class Ship
     deltas = (0..size - 1).map do |scale|
       Coord.new(orientation.x * scale, orientation.y * scale)
     end
-    @coords = deltas.map { |delta| start_pos.add(delta) }.to_set
+    @coords = deltas.map { |delta| start_pos + delta }.to_set
   end
 end
